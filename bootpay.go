@@ -155,7 +155,12 @@ func (c Bootpay) MustVerify(token string, receipt string, price int) *receiptDat
 }
 
 func (c Bootpay) Cancel(token string, receiptID string, name string, reason string) (*cancelData, error) {
-	req, err := http.NewRequest(http.MethodGet, "https://api.bootpay.co.kr/cancel", nil)
+	f := url.Values{}
+	f.Set("receipt_id", receiptID)
+	f.Set("name", name)
+	f.Set("reason", reason)
+
+	req, err := http.NewRequest(http.MethodGet, "https://api.bootpay.co.kr/cancel", strings.NewReader(f.Encode()))
 	if err != nil {
 		return nil, err
 	}
